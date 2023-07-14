@@ -45,10 +45,14 @@ class HuffmanSuite extends munit.FunSuite:
 
 
   test("combine of some leaf list (15pts)") {
-    val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
-    val leaflist2 = List(Leaf('e', 3), Leaf('t', 2), Leaf('x', 4))
-    assertEquals(combine(leaflist), List(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4)))
-    assertEquals(combine(leaflist2), List(Leaf('x', 4), Fork(Leaf('e', 3), Leaf('t', 2), List('e', 't'), 5)))
+    val leafList = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
+    val leafList2 = List(Leaf('e', 3), Leaf('t', 2), Leaf('x', 4))
+    assertEquals(combine(leafList), List(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4)))
+    assertEquals(combine(leafList2), List(Leaf('x', 4), Fork(Leaf('e', 3), Leaf('t', 2), List('e', 't'), 5)))
+  }
+  test("until") {
+    val leafList = List(Leaf('e', 3), Leaf('t', 2), Leaf('x', 4))
+    assertEquals(singleton(until(singleton, combine)(leafList)), true)
   }
 
 
