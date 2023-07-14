@@ -136,7 +136,6 @@ trait Huffman extends HuffmanInterface:
   def createCodeTree(chars: List[Char]): CodeTree =
     until(singleton, combine)(makeOrderedLeafList(times(chars))).head
 
-
   // Part 3: Decoding
 
   type Bit = Int
@@ -146,6 +145,7 @@ trait Huffman extends HuffmanInterface:
    * the resulting list of characters.
    */
   def decode(tree: CodeTree, bits: List[Bit]): List[Char] = ???
+
 
   /**
    * A Huffman coding tree for the French language.
