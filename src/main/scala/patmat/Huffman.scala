@@ -144,7 +144,12 @@ trait Huffman extends HuffmanInterface:
    * This function decodes the bit sequence `bits` using the code tree `tree` and returns
    * the resulting list of characters.
    */
-  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = ???
+  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = tree match
+    case Leaf(char, _) if bits.isEmpty => List(char)
+    case Leaf(char, _) => char :: decode(tree, bits.tail)
+    case Fork(left, right, _, _) if bits.head == 0 => decode(left, bits.tail)
+    case Fork(left, right, _, _) if bits.head == 1 => decode(right, bits.tail)
+
 
 
   /**
