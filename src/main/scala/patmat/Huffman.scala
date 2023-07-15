@@ -20,7 +20,7 @@ case class Leaf(char: Char, weight: Int) extends CodeTree
  * Assignment 4: Huffman coding
  *
  */
-trait Huffman extends HuffmanInterface:
+trait Huffman extends HuffmanInterface :
 
   // Part 1: Basics
   def weight(tree: CodeTree): Int = tree match
@@ -144,12 +144,14 @@ trait Huffman extends HuffmanInterface:
    * This function decodes the bit sequence `bits` using the code tree `tree` and returns
    * the resulting list of characters.
    */
-  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = tree match
-    case Leaf(char, _) if bits.isEmpty => List(char)
-    case Leaf(char, _) => char :: decode(tree, bits.tail)
-    case Fork(left, right, _, _) if bits.head == 0 => decode(left, bits.tail)
-    case Fork(left, right, _, _) if bits.head == 1 => decode(right, bits.tail)
+  def decode(tree: CodeTree, bits: List[Bit]): List[Char] =
+    def loop(currentNode: CodeTree, bits: List[Bit]): List[Char] = currentNode match
+      case Leaf(char, _) if bits.isEmpty => List(char)
+      case Leaf(char, _) if bits.nonEmpty => char :: loop(tree, bits)
+      case Fork(left, right, _, _) if bits.head == 0 => loop(left, bits.tail)
+      case Fork(left, right, _, _) if bits.head == 1 => loop(right, bits.tail)
 
+    loop(tree, bits)
 
 
   /**
