@@ -1,6 +1,6 @@
 package patmat
 
-class HuffmanSuite extends munit.FunSuite:
+class HuffmanSuite extends munit.FunSuite :
 
   import Huffman.*
 
@@ -13,24 +13,24 @@ class HuffmanSuite extends munit.FunSuite:
   }
 
   test("def times") {
-    new TestTrees:
+    new TestTrees :
       assertEquals(times(charsList), List(('a', 2), ('b', 3), ('c', 1)))
   }
 
   test("def singleton") {
-    new TestTrees:
+    new TestTrees :
       listOfTrees = tree :: listOfTrees
       assert(singleton(listOfTrees))
   }
 
   test("weight of a larger tree (10pts)") {
-    new TestTrees:
+    new TestTrees :
       assertEquals(weight(t1), 5)
   }
 
 
   test("chars of a larger tree (10pts)") {
-    new TestTrees:
+    new TestTrees :
       assertEquals(chars(t2), List('a', 'b', 'd'))
   }
 
@@ -58,10 +58,10 @@ class HuffmanSuite extends munit.FunSuite:
 
   test("createCodeTree") {
     val charsList = List('a', 'a', 'b', 'b', 'b', 'c')
-    assertEquals(createCodeTree(charsList), Fork(Fork(Leaf('c',1),Leaf('a',2),List('c', 'a'),3),Leaf('b',3),List('c', 'a', 'b'),6))
+    assertEquals(createCodeTree(charsList), Fork(Fork(Leaf('c', 1), Leaf('a', 2), List('c', 'a'), 3), Leaf('b', 3), List('c', 'a', 'b'), 6))
   }
 
-  test("decode"){
+  test("decode") {
     val t2 = Fork(Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5), Leaf('d', 4), List('a', 'b', 'd'), 9)
     val s1: List[Bit] = List(0, 0, 0, 1, 1)
     assertEquals(decode(t2, s1), List('a', 'b', 'd'))
@@ -71,8 +71,14 @@ class HuffmanSuite extends munit.FunSuite:
     assertEquals(decode(frenchCode, secret), List('h', 'u', 'f', 'f', 'm', 'a', 'n', 'e', 's', 't', 'c', 'o', 'o', 'l'))
   }
 
+  test("encode") {
+    val t2 = Fork(Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5), Leaf('d', 4), List('a', 'b', 'd'), 9)
+    val charsList = List('a', 'b', 'd')
+    assertEquals(encode(t2)(charsList), List(0, 0, 0, 1, 1))
+  }
+
   test("decode and encode a very short text should be identity (10pts)") {
-    new TestTrees:
+    new TestTrees :
       assertEquals(decode(t1, encode(t1)("ab".toList)), "ab".toList)
   }
 
