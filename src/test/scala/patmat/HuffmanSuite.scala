@@ -82,6 +82,11 @@ class HuffmanSuite extends munit.FunSuite :
       assertEquals(decode(t1, encode(t1)("ab".toList)), "ab".toList)
   }
 
+  test("codeBits") {
+    val table: CodeTable = List(('a', List(0, 0)), ('b', List(0, 1)))
+    assertEquals(codeBits(table)('b'), List(0,1))
+  }
+
 
   import scala.concurrent.duration.*
 
