@@ -84,9 +84,26 @@ class HuffmanSuite extends munit.FunSuite :
 
   test("codeBits") {
     val table: CodeTable = List(('a', List(0, 0)), ('b', List(0, 1)))
-    assertEquals(codeBits(table)('b'), List(0,1))
+    assertEquals(codeBits(table)('b'), List(0, 1))
   }
 
+  test("convert") {
+    val codeTree = Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5)
+    val table: CodeTable = List(('a', List(0)), ('b', List(1)))
+    assertEquals(convert(codeTree), table)
+  }
+
+  test("mergeCodeTables") {
+    val table1 = List(('a', List(0)), ('b', List(1, 0)))
+    val table2 = List(('c', List(1)), ('d', List(0, 1)))
+    assertEquals(mergeCodeTables(table1, table2), List(('a', List(0, 0)), ('b', List(0, 1, 0)), ('c', List(1, 1)), ('d', List(1, 0, 1))))
+  }
+
+  test("quickEncode") {
+    val codeTree = Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5)
+    val text = List('a', 'b')
+    assertEquals(quickEncode(codeTree)(text), List(0, 1))
+  }
 
   import scala.concurrent.duration.*
 
