@@ -20,7 +20,7 @@ case class Leaf(char: Char, weight: Int) extends CodeTree
  * Assignment 4: Huffman coding
  *
  */
-trait Huffman extends HuffmanInterface :
+trait Huffman extends HuffmanInterface:
 
   // Part 1: Basics
   def weight(tree: CodeTree): Int = tree match
@@ -216,7 +216,8 @@ trait Huffman extends HuffmanInterface :
    * on the two parameter code tables.
    */
   def mergeCodeTables(a: CodeTable, b: CodeTable): CodeTable =
-    def prependBit(bit: Bit)(codeTable: CodeTable): CodeTable = codeTable map (code => (code._1, bit :: code._2))
+    def prependBit(bit: Bit)(codeTable: CodeTable): CodeTable =
+      codeTable map (code => (code._1, bit :: code._2))
 
     prependBit(0)(a) ::: prependBit(1)(b)
 
