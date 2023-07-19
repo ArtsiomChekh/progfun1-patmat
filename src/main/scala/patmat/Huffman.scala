@@ -1,5 +1,7 @@
 package patmat
 
+import scala.annotation.tailrec
+
 /**
  * A huffman code is represented by a binary tree.
  *
@@ -70,8 +72,11 @@ trait Huffman extends HuffmanInterface:
    * println("integer is  : "+ theInt)
    * }
    */
-  def times(chars: List[Char]): List[(Char, Int)] =
-    chars.groupBy(c => c).view.mapValues(_.size).toList
+  def times(chars: List[Char]): List[(Char, Int)] = chars match
+    case Nil => Nil
+    case x :: xs =>
+      val (same, rest) = xs.span(_ == x)
+      (x, same.length + 1) :: times(rest)
 
 
   /**
@@ -82,9 +87,8 @@ trait Huffman extends HuffmanInterface:
    * of a leaf is the frequency of the character.
    */
   def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] =
-    freqs.sortBy(_._2).map {
-      case (char, weight) => Leaf(char, weight)
-    }
+    val leafSortedList = freqs.map { case (char, weight) => Leaf(char, weight) }
+    leafSortedList.sortBy(_.weight)
 
 
   /**
@@ -106,7 +110,6 @@ trait Huffman extends HuffmanInterface:
    * unchanged.
    */
   def combine(trees: List[CodeTree]): List[CodeTree] = trees match
-    case List() => List()
     case x :: y :: ys => (makeCodeTree(x, y) :: ys).sortWith((a, b) => weight(a) < weight(b))
     case _ => trees
 
@@ -145,13 +148,14 @@ trait Huffman extends HuffmanInterface:
    * the resulting list of characters.
    */
   def decode(tree: CodeTree, bits: List[Bit]): List[Char] =
-    def loop(currentNode: CodeTree, bits: List[Bit]): List[Char] = currentNode match
-      case Leaf(char, _) if bits.isEmpty => List(char)
-      case Leaf(char, _) if bits.nonEmpty => char :: loop(tree, bits)
-      case Fork(left, right, _, _) if bits.head == 0 => loop(left, bits.tail)
-      case Fork(left, right, _, _) if bits.head == 1 => loop(right, bits.tail)
+    @tailrec
+    def loop(node: CodeTree, bits: List[Bit], acc: List[Char]): List[Char] = node match
+      case Leaf(char, _) if bits.isEmpty => acc ::: List(char)
+      case Leaf(char, _) if bits.nonEmpty => loop(tree, bits, acc ::: List(char))
+      case Fork(left, right, _, _) if bits.head == 0 => loop(left, bits.tail, acc)
+      case Fork(left, right, _, _) if bits.head == 1 => loop(right, bits.tail, acc)
 
-    loop(tree, bits)
+    loop(tree, bits, Nil)
 
 
   /**
@@ -180,12 +184,13 @@ trait Huffman extends HuffmanInterface:
    * into a sequence of bits.
    */
   def encode(tree: CodeTree)(text: List[Char]): List[Bit] =
-    def loop(tree: CodeTree)(char: Char): List[Bit] = tree match
-      case Leaf(_, _) => List()
-      case Fork(left, right, _, _) if chars(left).contains(char) => 0 :: loop(left)(char)
-      case Fork(left, right, _, _) if chars(right).contains(char) => 1 :: loop(right)(char)
+    @tailrec
+    def loop(node: CodeTree, acc: List[Bit])(char: Char): List[Bit] = node match
+      case Leaf(_, _) => acc
+      case Fork(left, right, _, _) if chars(left).contains(char) => loop(left, acc ::: List(0))(char)
+      case Fork(left, right, _, _) if chars(right).contains(char) => loop(right, acc ::: List(1))(char)
 
-    text flatMap loop(tree)
+    text flatMap (char => loop(tree, Nil)(char))
 
   // Part 4b: Encoding using code table
 
@@ -196,7 +201,7 @@ trait Huffman extends HuffmanInterface:
    * the code table `table`.
    */
   def codeBits(table: CodeTable)(char: Char): List[Bit] =
-    table.filter(tuple => tuple._1 == char).head._2
+    table.find(_._1 == char).head._2
 
   /**
    * Given a code tree, create a code table which contains, for every character in the
@@ -220,7 +225,6 @@ trait Huffman extends HuffmanInterface:
       codeTable map (code => (code._1, bit :: code._2))
 
     prependBit(0)(a) ::: prependBit(1)(b)
-
 
   /**
    * This function encodes `text` according to the code tree `tree`.

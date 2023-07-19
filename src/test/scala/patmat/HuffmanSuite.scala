@@ -1,6 +1,6 @@
 package patmat
 
-class HuffmanSuite extends munit.FunSuite :
+class HuffmanSuite extends munit.FunSuite:
 
   import Huffman.*
 
@@ -13,24 +13,24 @@ class HuffmanSuite extends munit.FunSuite :
   }
 
   test("def times") {
-    new TestTrees :
+    new TestTrees:
       assertEquals(times(charsList), List(('a', 2), ('b', 3), ('c', 1)))
   }
 
   test("def singleton") {
-    new TestTrees :
+    new TestTrees:
       listOfTrees = tree :: listOfTrees
       assert(singleton(listOfTrees))
   }
 
   test("weight of a larger tree (10pts)") {
-    new TestTrees :
+    new TestTrees:
       assertEquals(weight(t1), 5)
   }
 
 
   test("chars of a larger tree (10pts)") {
-    new TestTrees :
+    new TestTrees:
       assertEquals(chars(t2), List('a', 'b', 'd'))
   }
 
@@ -47,8 +47,10 @@ class HuffmanSuite extends munit.FunSuite :
   test("combine of some leaf list (15pts)") {
     val leafList = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
     val leafList2 = List(Leaf('e', 3), Leaf('t', 2), Leaf('x', 4))
+    val leafListEmpty = List()
     assertEquals(combine(leafList), List(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4)))
     assertEquals(combine(leafList2), List(Leaf('x', 4), Fork(Leaf('e', 3), Leaf('t', 2), List('e', 't'), 5)))
+    assertEquals(combine(leafListEmpty), List())
   }
 
   test("until") {
@@ -78,7 +80,7 @@ class HuffmanSuite extends munit.FunSuite :
   }
 
   test("decode and encode a very short text should be identity (10pts)") {
-    new TestTrees :
+    new TestTrees:
       assertEquals(decode(t1, encode(t1)("ab".toList)), "ab".toList)
   }
 
