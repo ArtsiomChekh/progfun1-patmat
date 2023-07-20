@@ -154,11 +154,11 @@ trait Huffman extends HuffmanInterface:
   def decode(tree: CodeTree, bits: List[Bit]): List[Char] =
     @tailrec
     def loop(node: CodeTree, bits: List[Bit], acc: List[Char]): List[Char] =
-      node match
-        case Leaf(char, _) if bits.isEmpty => acc ::: List(char)
-        case Leaf(char, _) if bits.nonEmpty => loop(tree, bits, acc ::: List(char))
-        case Fork(left, right, _, _) if bits.head == 0 => loop(left, bits.tail, acc)
-        case Fork(left, right, _, _) if bits.head == 1 => loop(right, bits.tail, acc)
+      (node, bits) match
+        case (Leaf(char, _), moreBits) => loop(tree, moreBits, char :: acc)
+        case (Fork(left, right, _, _), 0 :: moreBits) => loop(left, moreBits, acc)
+        case (Fork(left, right, _, _), 1 :: moreBits) => loop(right, moreBits, acc)
+        case _ => acc.reverse
 
     loop(tree, bits, Nil)
 
