@@ -5,9 +5,9 @@ class HuffmanSuite extends munit.FunSuite:
   import Huffman.*
 
   trait TestTrees {
-    val t1 = Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5)
-    val t2 = Fork(Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5), Leaf('d', 4), List('a', 'b', 'd'), 9)
-    val charsList = List('a', 'a', 'b', 'b', 'b', 'c')
+    val t1: Fork = Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5)
+    val t2: Fork = Fork(Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5), Leaf('d', 4), List('a', 'b', 'd'), 9)
+    val charsList: List[Char] = List('a', 'a', 'b', 'b', 'b', 'c')
     val tree: CodeTree = t1
     var listOfTrees: List[CodeTree] = List()
   }
@@ -109,4 +109,4 @@ class HuffmanSuite extends munit.FunSuite:
 
   import scala.concurrent.duration.*
 
-  override val munitTimeout = 10.seconds
+  override val munitTimeout: FiniteDuration = 10.seconds
