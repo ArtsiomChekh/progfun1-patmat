@@ -191,11 +191,11 @@ trait Huffman extends HuffmanInterface:
   def encode(tree: CodeTree)(text: List[Char]): List[Bit] =
     @tailrec
     def loop(node: CodeTree, acc: List[Bit])(char: Char): List[Bit] = node match
-      case Leaf(_, _) => acc
-      case Fork(left, right, _, _) if chars(left).contains(char) => loop(left, acc ::: List(0))(char)
-      case Fork(left, right, _, _) if chars(right).contains(char) => loop(right, acc ::: List(1))(char)
+      case Leaf(_, _) => acc.reverse
+      case Fork(left, right, _, _) if chars(left).contains(char) => loop(left, 0 :: acc)(char)
+      case Fork(left, right, _, _) if chars(right).contains(char) => loop(right, 1 :: acc)(char)
 
-    text flatMap (char => loop(tree, Nil)(char))
+    text flatMap loop(tree, Nil)
 
   // Part 4b: Encoding using code table
 
