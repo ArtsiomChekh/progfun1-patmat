@@ -77,11 +77,9 @@ trait Huffman extends HuffmanInterface:
     def loop(uniqueChars: List[Char], acc: List[(Char, Int)]): List[(Char, Int)] =
       uniqueChars match
         case Nil => acc.reverse
-        case x :: xs =>
-          val count = chars.count(_ == x)
-          loop(xs, (x, count) :: acc)
+        case x :: xs => loop(xs.filter(_ != x), (x, uniqueChars.count(_ == x)) :: acc)
 
-    loop(chars.distinct, Nil)
+    loop(chars, Nil)
 
 
   /**
