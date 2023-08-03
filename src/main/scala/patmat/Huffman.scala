@@ -74,14 +74,18 @@ trait Huffman extends HuffmanInterface:
    */
   def times(chars: List[Char]): List[(Char, Int)] =
     @tailrec
-    def loop(chars: List[Char], acc: List[(Char, Int)]): List[(Char, Int)] = chars match
+    def loop(remainingChars: List[Char], acc: List[(Char, Int)]): List[(Char, Int)] = remainingChars match
       case Nil => acc.reverse
-      case x :: xs if !acc.exists(_._1 == x) => loop(xs, (x, 1) :: acc)
       case x :: xs =>
-        val updatedAcc = acc.map((theChar, theInt) =>
-          if (theChar == x) (theChar, theInt + 1)
-          else (theChar, theInt))
-        loop(xs, updatedAcc)
+        if !acc.exists(_._1 == x) then
+          loop(xs, (x, 1) :: acc)
+        else
+          val updatedAcc = acc.map((theChar, theInt) =>
+            if theChar == x then
+              (theChar, theInt + 1)
+            else
+              (theChar, theInt))
+          loop(xs, updatedAcc)
 
     loop(chars, Nil)
 
