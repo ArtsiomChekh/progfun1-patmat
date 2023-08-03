@@ -73,21 +73,17 @@ trait Huffman extends HuffmanInterface:
    * }
    */
   def times(chars: List[Char]): List[(Char, Int)] =
-    @tailrec
-    def loop(remainingChars: List[Char], acc: List[(Char, Int)]): List[(Char, Int)] = remainingChars match
-      case Nil => acc.reverse
-      case x :: xs =>
-        if !acc.exists(_._1 == x) then
-          loop(xs, (x, 1) :: acc)
-        else
-          val updatedAcc = acc.map((theChar, theInt) =>
-            if theChar == x then
-              (theChar, theInt + 1)
-            else
-              (theChar, theInt))
-          loop(xs, updatedAcc)
+    chars.foldLeft(List())(addChar)
 
-    loop(chars, Nil)
+  def addChar(acc: List[(Char, Int)], char: Char): List[(Char, Int)] =
+    if acc.exists(_._1 == char) then
+      acc.map((c, i) =>
+        if c == char then
+          (c, i + 1)
+        else
+          (c, i))
+    else
+      acc ::: List((char, 1))
 
   /**
    * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
@@ -98,7 +94,6 @@ trait Huffman extends HuffmanInterface:
    */
   def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] =
     freqs.map((char, weight) => Leaf(char, weight)).sortBy(_.weight)
-
 
   /**
    * Checks whether the list `trees` contains only one single code tree.
